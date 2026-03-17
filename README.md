@@ -2,7 +2,7 @@
 
 An interactive healthcare analytics dashboard that turns raw patient CSV data into visual insights, AI-generated analysis, and actionable recommendations — with no coding required to use.
 
-**[▶ Live Demo](#)** &nbsp;|&nbsp; **Built with:** HTML · CSS · JavaScript · Chart.js · AI Insights Engine
+**[▶ Live Demo](https://github.com/rawal18/clinical-data-intelligence-platform)** &nbsp;|&nbsp; **Built with:** HTML · CSS · JavaScript · Chart.js · AI Insights Engine
 
 ---
 
