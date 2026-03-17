@@ -1,0 +1,101 @@
+patient_id,age,gender,admission_date,discharge_date,department,diagnosis,length_of_stay_days,readmitted,insurance_type,total_cost,outcome
+P001,67,Female,2024-01-03,2024-01-07,Cardiology,Heart Failure,4,No,Medicare,12400,Discharged
+P002,45,Male,2024-01-05,2024-01-06,Emergency,Appendicitis,1,No,Private,3200,Discharged
+P003,72,Female,2024-01-08,2024-01-15,Orthopedics,Hip Fracture,7,Yes,Medicare,28500,Discharged
+P004,58,Male,2024-01-10,2024-01-13,Cardiology,Hypertension,3,No,Medicaid,8700,Discharged
+P005,34,Female,2024-01-12,2024-01-12,Emergency,Asthma,0,No,Private,1500,Discharged
+P006,80,Male,2024-01-14,2024-01-21,Neurology,Stroke,7,Yes,Medicare,34000,Transferred
+P007,55,Female,2024-01-15,2024-01-17,Oncology,Chemotherapy,2,No,Private,15600,Discharged
+P008,63,Male,2024-01-18,2024-01-22,Cardiology,Heart Attack,4,No,Medicare,22300,Discharged
+P009,29,Female,2024-01-20,2024-01-21,Maternity,Normal Delivery,1,No,Private,4200,Discharged
+P010,74,Male,2024-01-22,2024-01-28,Orthopedics,Knee Replacement,6,No,Medicare,31000,Discharged
+P011,50,Female,2024-01-25,2024-01-27,Cardiology,Arrhythmia,2,No,Medicaid,9800,Discharged
+P012,41,Male,2024-01-28,2024-01-29,Emergency,Fracture,1,No,Private,2700,Discharged
+P013,66,Female,2024-02-01,2024-02-06,Neurology,Epilepsy,5,No,Medicare,17200,Discharged
+P014,78,Male,2024-02-03,2024-02-10,Cardiology,Heart Failure,7,Yes,Medicare,26800,Discharged
+P015,53,Female,2024-02-05,2024-02-07,Oncology,Biopsy,2,No,Private,8900,Discharged
+P016,35,Male,2024-02-08,2024-02-08,Emergency,Laceration,0,No,Uninsured,800,Discharged
+P017,69,Female,2024-02-10,2024-02-16,Orthopedics,Spinal Surgery,6,No,Medicare,29400,Discharged
+P018,47,Male,2024-02-12,2024-02-14,Cardiology,Chest Pain,2,No,Private,7600,Discharged
+P019,82,Female,2024-02-15,2024-02-22,Neurology,Dementia,7,No,Medicare,21000,Transferred
+P020,60,Male,2024-02-18,2024-02-20,Oncology,Radiation,2,No,Private,12000,Discharged
+P021,44,Female,2024-02-20,2024-02-21,Emergency,Allergic Reaction,1,No,Medicaid,1900,Discharged
+P022,71,Male,2024-02-22,2024-02-28,Cardiology,Heart Failure,6,Yes,Medicare,24500,Discharged
+P023,38,Female,2024-02-25,2024-02-26,Maternity,C-Section,1,No,Private,6800,Discharged
+P024,55,Male,2024-02-28,2024-03-03,Orthopedics,Shoulder Surgery,4,No,Private,18200,Discharged
+P025,63,Female,2024-03-01,2024-03-05,Neurology,Migraine,4,No,Medicaid,11000,Discharged
+P026,76,Male,2024-03-04,2024-03-11,Cardiology,Valve Surgery,7,No,Medicare,42000,Discharged
+P027,49,Female,2024-03-06,2024-03-08,Oncology,Chemotherapy,2,No,Private,14300,Discharged
+P028,33,Male,2024-03-09,2024-03-09,Emergency,Head Injury,0,No,Private,2100,Discharged
+P029,68,Female,2024-03-12,2024-03-18,Orthopedics,Hip Replacement,6,Yes,Medicare,33500,Discharged
+P030,57,Male,2024-03-14,2024-03-16,Cardiology,Hypertension,2,No,Medicaid,6200,Discharged
+P031,84,Female,2024-03-17,2024-03-24,Neurology,Stroke,7,Yes,Medicare,38000,Transferred
+P032,46,Male,2024-03-19,2024-03-20,Emergency,Pneumonia,1,No,Private,3400,Discharged
+P033,61,Female,2024-03-21,2024-03-25,Cardiology,Heart Failure,4,No,Medicare,19700,Discharged
+P034,39,Male,2024-03-24,2024-03-25,Maternity,Normal Delivery,1,No,Medicaid,3900,Discharged
+P035,73,Female,2024-03-27,2024-04-02,Oncology,Surgery,6,No,Medicare,27800,Discharged
+P036,52,Male,2024-03-29,2024-03-31,Cardiology,Arrhythmia,2,No,Private,8400,Discharged
+P037,65,Female,2024-04-02,2024-04-07,Orthopedics,Knee Surgery,5,No,Medicare,22100,Discharged
+P038,43,Male,2024-04-05,2024-04-06,Emergency,Appendicitis,1,No,Private,3600,Discharged
+P039,77,Female,2024-04-07,2024-04-14,Neurology,Parkinson,7,No,Medicare,25600,Transferred
+P040,59,Male,2024-04-10,2024-04-13,Cardiology,Chest Pain,3,No,Medicaid,10200,Discharged
+P041,36,Female,2024-04-13,2024-04-14,Emergency,Asthma,1,No,Private,2200,Discharged
+P042,70,Male,2024-04-15,2024-04-21,Cardiology,Heart Attack,6,Yes,Medicare,29100,Discharged
+P043,54,Female,2024-04-18,2024-04-20,Oncology,Chemotherapy,2,No,Private,13700,Discharged
+P044,28,Male,2024-04-21,2024-04-21,Emergency,Fracture,0,No,Uninsured,1100,Discharged
+P045,81,Female,2024-04-23,2024-04-30,Orthopedics,Spinal Surgery,7,Yes,Medicare,36200,Discharged
+P046,48,Male,2024-04-26,2024-04-28,Cardiology,Hypertension,2,No,Private,7100,Discharged
+P047,62,Female,2024-04-29,2024-05-04,Neurology,Epilepsy,5,No,Medicare,18300,Discharged
+P048,37,Male,2024-05-01,2024-05-02,Maternity,Normal Delivery,1,No,Private,4500,Discharged
+P049,75,Female,2024-05-04,2024-05-11,Cardiology,Heart Failure,7,Yes,Medicare,27600,Discharged
+P050,56,Male,2024-05-06,2024-05-09,Oncology,Radiation,3,No,Private,16400,Discharged
+P051,64,Female,2024-05-09,2024-05-13,Orthopedics,Hip Fracture,4,No,Medicare,20900,Discharged
+P052,42,Male,2024-05-11,2024-05-12,Emergency,Laceration,1,No,Medicaid,1600,Discharged
+P053,79,Female,2024-05-14,2024-05-21,Neurology,Stroke,7,Yes,Medicare,39500,Transferred
+P054,51,Male,2024-05-16,2024-05-18,Cardiology,Arrhythmia,2,No,Private,9100,Discharged
+P055,67,Female,2024-05-19,2024-05-23,Oncology,Surgery,4,No,Medicare,23400,Discharged
+P056,32,Male,2024-05-21,2024-05-21,Emergency,Allergic Reaction,0,No,Private,900,Discharged
+P057,74,Female,2024-05-24,2024-05-30,Orthopedics,Knee Replacement,6,No,Medicare,32700,Discharged
+P058,46,Male,2024-05-27,2024-05-29,Cardiology,Chest Pain,2,No,Medicaid,8300,Discharged
+P059,60,Female,2024-05-30,2024-06-04,Neurology,Migraine,5,No,Private,14800,Discharged
+P060,83,Male,2024-06-02,2024-06-09,Cardiology,Heart Failure,7,Yes,Medicare,31200,Discharged
+P061,45,Female,2024-06-05,2024-06-06,Emergency,Pneumonia,1,No,Private,2900,Discharged
+P062,71,Male,2024-06-08,2024-06-14,Orthopedics,Hip Replacement,6,No,Medicare,34100,Discharged
+P063,53,Female,2024-06-10,2024-06-12,Oncology,Chemotherapy,2,No,Private,15100,Discharged
+P064,38,Male,2024-06-13,2024-06-14,Maternity,C-Section,1,No,Private,7200,Discharged
+P065,66,Female,2024-06-16,2024-06-22,Cardiology,Valve Surgery,6,No,Medicare,41000,Discharged
+P066,49,Male,2024-06-18,2024-06-20,Neurology,Epilepsy,2,No,Medicaid,10500,Discharged
+P067,77,Female,2024-06-21,2024-06-28,Orthopedics,Spinal Surgery,7,Yes,Medicare,37800,Discharged
+P068,55,Male,2024-06-24,2024-06-26,Cardiology,Hypertension,2,No,Private,7900,Discharged
+P069,62,Female,2024-06-27,2024-07-02,Emergency,Head Injury,5,No,Medicaid,12600,Discharged
+P070,40,Male,2024-06-29,2024-06-30,Emergency,Appendicitis,1,No,Private,3800,Discharged
+P071,68,Female,2024-07-02,2024-07-08,Cardiology,Heart Attack,6,No,Medicare,28400,Discharged
+P072,57,Male,2024-07-05,2024-07-07,Oncology,Radiation,2,No,Private,11800,Discharged
+P073,80,Female,2024-07-08,2024-07-15,Neurology,Dementia,7,No,Medicare,26500,Transferred
+P074,44,Male,2024-07-11,2024-07-12,Emergency,Fracture,1,No,Private,2400,Discharged
+P075,72,Female,2024-07-14,2024-07-20,Orthopedics,Knee Surgery,6,Yes,Medicare,30800,Discharged
+P076,50,Male,2024-07-17,2024-07-19,Cardiology,Arrhythmia,2,No,Medicaid,8600,Discharged
+P077,35,Female,2024-07-20,2024-07-21,Maternity,Normal Delivery,1,No,Private,4100,Discharged
+P078,76,Male,2024-07-22,2024-07-29,Cardiology,Heart Failure,7,Yes,Medicare,30500,Discharged
+P079,61,Female,2024-07-25,2024-07-29,Oncology,Surgery,4,No,Private,21700,Discharged
+P080,43,Male,2024-07-28,2024-07-29,Emergency,Asthma,1,No,Private,2000,Discharged
+P081,69,Female,2024-07-31,2024-08-06,Orthopedics,Hip Fracture,6,No,Medicare,29700,Discharged
+P082,54,Male,2024-08-02,2024-08-04,Neurology,Migraine,2,No,Private,9400,Discharged
+P083,78,Female,2024-08-05,2024-08-12,Cardiology,Heart Failure,7,Yes,Medicare,32900,Discharged
+P084,47,Male,2024-08-08,2024-08-09,Emergency,Laceration,1,No,Medicaid,1400,Discharged
+P085,64,Female,2024-08-11,2024-08-15,Oncology,Chemotherapy,4,No,Medicare,19800,Discharged
+P086,36,Male,2024-08-14,2024-08-15,Emergency,Allergic Reaction,1,No,Private,1700,Discharged
+P087,73,Female,2024-08-17,2024-08-24,Orthopedics,Hip Replacement,7,No,Medicare,35600,Discharged
+P088,58,Male,2024-08-20,2024-08-22,Cardiology,Chest Pain,2,No,Private,8100,Discharged
+P089,65,Female,2024-08-23,2024-08-28,Neurology,Stroke,5,Yes,Medicare,36800,Transferred
+P090,41,Male,2024-08-26,2024-08-27,Maternity,Normal Delivery,1,No,Medicaid,3700,Discharged
+P091,79,Female,2024-08-29,2024-09-05,Cardiology,Valve Surgery,7,No,Medicare,43500,Discharged
+P092,52,Male,2024-09-01,2024-09-03,Oncology,Radiation,2,No,Private,12500,Discharged
+P093,66,Female,2024-09-04,2024-09-08,Orthopedics,Knee Replacement,4,No,Medicare,21300,Discharged
+P094,39,Male,2024-09-07,2024-09-08,Emergency,Appendicitis,1,No,Private,3300,Discharged
+P095,74,Female,2024-09-10,2024-09-17,Neurology,Parkinson,7,No,Medicare,27200,Transferred
+P096,48,Male,2024-09-13,2024-09-15,Cardiology,Hypertension,2,No,Medicaid,7300,Discharged
+P097,62,Female,2024-09-16,2024-09-20,Oncology,Surgery,4,No,Private,22600,Discharged
+P098,33,Male,2024-09-19,2024-09-20,Emergency,Head Injury,1,No,Private,2600,Discharged
+P099,81,Female,2024-09-22,2024-09-29,Cardiology,Heart Failure,7,Yes,Medicare,33700,Discharged
+P100,56,Male,2024-09-25,2024-09-27,Orthopedics,Shoulder Surgery,2,No,Private,14600,Discharged

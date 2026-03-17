@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Clinical Data Intelligence Platform</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'DM Sans',sans-serif;background:#f4f6f9;color:#1a1a2e;min-height:100vh}
+.container{max-width:1300px;margin:0 auto;padding:24px}
+.ehr{font-family:'DM Sans',sans-serif;width:100%;background:#f4f6f9}
+
+/* HEADER */
+.ehr-header{position:relative;display:flex;align-items:center;justify-content:center;padding:18px 0 20px;border-bottom:1px solid #e2e8f0;margin-bottom:24px}
+.ehr-logo{width:44px;height:44px;border-radius:10px;background:#185FA5;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:22px;position:absolute;left:0}
+.ehr-titles{text-align:center}
+.ehr-title{font-size:18px;font-weight:600;color:#0f172a;line-height:1.2}
+.ehr-sub{font-size:12px;color:#64748b;margin-top:3px;letter-spacing:0.2px}
+.ehr-header-right{display:none}
+.status-dot{width:7px;height:7px;border-radius:50%;background:#1D9E75}
+.status-label{font-size:11px;color:#64748b}
+.status-bar{display:flex;align-items:center;gap:6px;margin-bottom:14px;font-size:12px;color:#64748b}
+
+/* UPLOAD */
+.upload-zone{border:1.5px dashed #cbd5e1;border-radius:12px;padding:36px 24px;text-align:center;cursor:pointer;transition:background 0.2s;margin-bottom:16px;background:#fff}
+.upload-zone:hover{background:#f8fafc}
+.upload-icon{font-size:32px;margin-bottom:10px}
+.upload-title{font-size:15px;font-weight:600;color:#0f172a;margin-bottom:6px}
+.upload-sub{font-size:13px;color:#64748b;margin-bottom:16px}
+.upload-sub span{color:#185FA5;font-weight:500}
+.upload-formats{font-size:11px;color:#94a3b8;margin-top:10px}
+.upload-formats code{background:#f1f5f9;padding:2px 6px;border-radius:4px;font-family:'DM Mono',monospace;font-size:11px}
+.btn-upload{background:#185FA5;color:white;border:none;border-radius:8px;padding:10px 24px;font-size:13px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;transition:background 0.2s}
+.btn-upload:hover{background:#0C447C}
+
+/* EMPTY STATE */
+.empty-state{text-align:center;padding:60px 24px 40px}
+.empty-icon{font-size:48px;margin-bottom:16px;opacity:0.4}
+.empty-title{font-size:16px;font-weight:600;color:#0f172a;margin-bottom:8px}
+.empty-desc{font-size:13px;color:#64748b;line-height:1.6;max-width:360px;margin:0 auto 24px}
+.empty-steps{display:flex;gap:0;max-width:420px;margin:0 auto}
+.empty-step{flex:1;text-align:center;padding:12px 8px;position:relative}
+.empty-step:not(:last-child)::after{content:'→';position:absolute;right:-6px;top:50%;transform:translateY(-50%);color:#94a3b8;font-size:12px}
+.empty-step-num{width:24px;height:24px;border-radius:50%;background:#dbeafe;color:#1e40af;font-size:11px;font-weight:600;display:flex;align-items:center;justify-content:center;margin:0 auto 6px}
+.empty-step-label{font-size:11px;color:#64748b}
+
+/* FILE BAR */
+.file-bar{display:none;align-items:center;gap:10px;padding:10px 14px;background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;margin-bottom:16px;font-size:13px}
+.file-bar.show{display:flex}
+.file-dot{width:8px;height:8px;border-radius:50%;background:#1D9E75;flex-shrink:0}
+.file-name{color:#185FA5;font-weight:500}
+.file-count{color:#64748b;margin-left:auto;font-size:12px}
+
+/* FILTERS */
+.filters-panel{background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;padding:16px 18px;margin-bottom:20px;display:none}
+.filters-panel.show{display:block}
+.filters-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+.filters-label{font-size:12px;font-weight:600;color:#64748b;text-transform:uppercase;letter-spacing:0.5px}
+.btn-reset{background:transparent;color:#64748b;border:1px solid #e2e8f0;border-radius:8px;padding:7px 14px;font-size:12px;font-weight:500;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all 0.2s}
+.btn-reset:hover{background:#fff;color:#0f172a}
+.filters-grid{display:grid;grid-template-columns:repeat(2,1fr) repeat(2,1fr);gap:10px}
+.filter-group{display:flex;flex-direction:column;gap:5px}
+.filter-group label{font-size:11px;color:#64748b;font-weight:600;text-transform:uppercase;letter-spacing:0.4px}
+.filter-group select,.filter-group input[type=date]{width:100%;font-size:13px;font-family:'DM Sans',sans-serif;color:#0f172a;background:#fff;border:1px solid #e2e8f0;border-radius:8px;padding:8px 10px;outline:none;cursor:pointer}
+.filter-group select:focus,.filter-group input[type=date]:focus{border-color:#185FA5}
+.date-row{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.filter-results-bar{font-size:12px;color:#64748b;margin-top:12px;padding-top:10px;border-top:1px solid #e2e8f0}
+.filter-pill{display:inline-flex;align-items:center;background:#dbeafe;color:#1e40af;border-radius:20px;padding:2px 10px;font-size:11px;font-weight:500}
+
+/* KPI */
+.section-title{font-size:12px;font-weight:600;color:#94a3b8;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:12px}
+.kpi-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px}
+.kpi-card{background:#fff;border-radius:10px;padding:16px;border-left:3px solid #185FA5;box-shadow:0 1px 3px rgba(0,0,0,0.06);opacity:0;transform:translateY(10px);transition:opacity 0.4s ease,transform 0.4s ease}
+.kpi-card.anim{opacity:1;transform:translateY(0)}
+.kpi-card:nth-child(2){border-color:#1D9E75}
+.kpi-card:nth-child(3){border-color:#BA7517}
+.kpi-card:nth-child(4){border-color:#7F77DD}
+.kpi-label{font-size:11px;text-transform:uppercase;letter-spacing:0.5px;color:#64748b;font-weight:600;margin-bottom:6px}
+.kpi-value{font-size:26px;font-weight:600;color:#0f172a;line-height:1}
+.kpi-value small{font-size:14px;font-weight:400;color:#94a3b8}
+
+/* CHARTS */
+.charts-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;margin-bottom:20px}
+.chart-card{background:#fff;border:1px solid #e2e8f0;border-radius:12px;padding:18px;box-shadow:0 1px 3px rgba(0,0,0,0.05);opacity:0;transform:translateY(10px);transition:opacity 0.5s ease,transform 0.5s ease}
+.chart-card.anim{opacity:1;transform:translateY(0)}
+.chart-card-wide{background:#fff;border:1px solid #e2e8f0;border-radius:12px;padding:18px;margin-bottom:20px;box-shadow:0 1px 3px rgba(0,0,0,0.05);opacity:0;transform:translateY(10px);transition:opacity 0.5s ease,transform 0.5s ease}
+.chart-card-wide.anim{opacity:1;transform:translateY(0)}
+.chart-card-title{font-size:13px;font-weight:600;color:#0f172a;margin-bottom:14px}
+.chart-legend{display:flex;flex-wrap:wrap;gap:12px;margin-bottom:10px;font-size:12px;color:#64748b}
+.chart-legend span{display:flex;align-items:center;gap:4px}
+.legend-dot{width:10px;height:10px;border-radius:2px;flex-shrink:0}
+
+/* TABLE */
+.table-section{background:#fff;border:1px solid #e2e8f0;border-radius:12px;overflow:hidden;margin-bottom:20px;box-shadow:0 1px 3px rgba(0,0,0,0.05);opacity:0;transform:translateY(10px);transition:opacity 0.5s ease,transform 0.5s ease}
+.table-section.anim{opacity:1;transform:translateY(0)}
+.table-header{padding:14px 18px;border-bottom:1px solid #e2e8f0;display:flex;align-items:center;justify-content:space-between;background:#f8fafc}
+.table-header-title{font-size:13px;font-weight:600;color:#0f172a}
+.table-badge{font-size:11px;background:#f1f5f9;color:#64748b;padding:3px 10px;border-radius:20px}
+.data-table{width:100%;border-collapse:collapse;font-size:12px}
+.data-table th{padding:10px 14px;text-align:left;font-size:11px;font-weight:600;color:#64748b;text-transform:uppercase;letter-spacing:0.4px;border-bottom:1px solid #e2e8f0;background:#f8fafc}
+.data-table td{padding:11px 14px;color:#0f172a;border-bottom:1px solid #f1f5f9}
+.data-table tr:last-child td{border-bottom:none}
+.data-table tr:hover td{background:#f8fafc}
+.outcome-badge{display:inline-block;padding:2px 8px;border-radius:20px;font-size:11px;font-weight:500}
+.outcome-d{background:#dcfce7;color:#166534}
+.outcome-t{background:#fef3c7;color:#92400e}
+.outcome-o{background:#f1f5f9;color:#475569}
+
+/* AI INSIGHTS */
+.insights-trigger{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
+.insights-hint{font-size:13px;color:#64748b}
+.btn-insights{display:flex;align-items:center;gap:8px;background:#185FA5;color:white;border:none;border-radius:8px;padding:10px 22px;font-size:13px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;transition:background 0.2s}
+.btn-insights:hover{background:#0C447C}
+.btn-insights:disabled{opacity:0.5;cursor:not-allowed}
+.insights-card{background:#fff;border:1px solid #e2e8f0;border-radius:12px;overflow:hidden;display:none;margin-bottom:20px;box-shadow:0 1px 3px rgba(0,0,0,0.05)}
+.insights-card.show{display:block}
+.insights-card-hdr{background:#f8fafc;padding:14px 20px;border-bottom:1px solid #e2e8f0;display:flex;align-items:center;justify-content:space-between}
+.insights-badge{font-size:12px;background:#dbeafe;color:#1e40af;padding:3px 10px;border-radius:20px;font-weight:500}
+.insights-ts{font-size:11px;color:#94a3b8}
+.insights-body{padding:20px;display:grid;grid-template-columns:repeat(2,1fr)}
+.insight-row{padding:13px 14px;border-bottom:1px solid #f1f5f9;display:flex;gap:12px;align-items:flex-start}
+.insight-row:nth-child(odd){border-right:1px solid #f1f5f9}
+.insight-row:nth-last-child(-n+2){border-bottom:none}
+.insight-icon{width:30px;height:30px;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:14px}
+.ic-blue{background:#dbeafe}.ic-green{background:#dcfce7}.ic-amber{background:#fef3c7}.ic-purple{background:#ede9fe}.ic-teal{background:#ccfbf1}
+.insight-lbl{font-size:11px;text-transform:uppercase;letter-spacing:0.4px;color:#64748b;font-weight:600;margin-bottom:3px}
+.insight-txt{font-size:13px;color:#0f172a;line-height:1.5}
+.insight-txt strong{font-weight:600;color:#185FA5}
+.insight-rec{grid-column:1/-1;padding:14px 18px;display:flex;gap:12px;align-items:flex-start;border-top:1px solid #e2e8f0;background:#f8fafc}
+.rec-lbl{background:#185FA5;color:white;font-size:11px;font-weight:600;padding:3px 10px;border-radius:20px;white-space:nowrap;margin-top:2px;flex-shrink:0}
+.rec-txt{font-size:13px;color:#0f172a;line-height:1.6}
+.thinking-dots{display:inline-flex;gap:4px;align-items:center}
+.thinking-dots span{width:5px;height:5px;border-radius:50%;background:white;opacity:0.5;animation:tdot 1.2s ease-in-out infinite}
+.thinking-dots span:nth-child(2){animation-delay:0.2s}
+.thinking-dots span:nth-child(3){animation-delay:0.4s}
+@keyframes tdot{0%,100%{opacity:0.4}50%{opacity:1}}
+
+@media(max-width:768px){
+  .kpi-grid{grid-template-columns:repeat(2,1fr)}
+  .charts-grid{grid-template-columns:1fr}
+  .insights-body{grid-template-columns:1fr}
+  .insight-row:nth-child(odd){border-right:none}
+  .filters-grid{grid-template-columns:1fr 1fr}
+}
+</style>
+</head>
+<body>
+<div class="container">
+<div class="ehr">
+  <div class="ehr-header">
+    <div class="ehr-logo">⚕️</div>
+    <div class="ehr-titles">
+      <div class="ehr-title">Clinical Data Intelligence Platform</div>
+      <div class="ehr-sub">Healthcare Analytics & Patient Insights</div>
+    </div>
+  </div>
+  <div class="status-bar">
+    <div class="status-dot"></div>
+    <span class="status-label" id="statusLabel">No data loaded</span>
+  </div>
+
+  <div class="upload-zone" id="uploadZone" onclick="document.getElementById('csvIn').click()">
+    <div class="upload-icon">📂</div>
+    <div class="upload-title">Upload your healthcare data</div>
+    <div class="upload-sub">Drag and drop your file here, or <span>click to browse</span></div>
+    <button class="btn-upload" onclick="event.stopPropagation();document.getElementById('csvIn').click()">Choose CSV File</button>
+    <div class="upload-formats">Accepts <code>.csv</code> files with patient, clinical, or hospital records</div>
+    <input type="file" id="csvIn" accept=".csv" style="display:none" onchange="handleFile(this)"/>
+  </div>
+
+  <div class="file-bar" id="fileBar">
+    <div class="file-dot"></div>
+    <span class="file-name" id="fileName"></span>
+    <span class="file-count" id="fileCount"></span>
+  </div>
+
+  <div id="emptyState">
+    <div class="empty-state">
+      <div class="empty-icon">🏥</div>
+      <div class="empty-title">Your platform is ready</div>
+      <div class="empty-desc">Upload any CSV file with healthcare records to instantly visualize patient data, track clinical metrics, and generate AI-powered insights.</div>
+      <div class="empty-steps">
+        <div class="empty-step"><div class="empty-step-num">1</div><div class="empty-step-label">Upload CSV</div></div>
+        <div class="empty-step"><div class="empty-step-num">2</div><div class="empty-step-label">Apply filters</div></div>
+        <div class="empty-step"><div class="empty-step-num">3</div><div class="empty-step-label">View charts</div></div>
+        <div class="empty-step"><div class="empty-step-num">4</div><div class="empty-step-label">Generate insights</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div id="dashContent" style="display:none">
+    <div class="filters-panel" id="filtersPanel">
+      <div class="filters-top">
+        <span class="filters-label">Filters</span>
+        <button class="btn-reset" onclick="resetFilters()">Reset all</button>
+      </div>
+      <div class="filters-grid">
+        <div class="filter-group">
+          <label>Date range</label>
+          <div class="date-row">
+            <input type="date" id="fDateStart" onchange="applyFilters()">
+            <input type="date" id="fDateEnd" onchange="applyFilters()">
+          </div>
+        </div>
+        <div class="filter-group">
+          <label>Department</label>
+          <select id="fDept" onchange="applyFilters()"><option value="">All departments</option></select>
+        </div>
+        <div class="filter-group">
+          <label>Gender</label>
+          <select id="fGender" onchange="applyFilters()"><option value="">All</option><option>Male</option><option>Female</option></select>
+        </div>
+        <div class="filter-group">
+          <label>Insurance type</label>
+          <select id="fIns" onchange="applyFilters()"><option value="">All types</option></select>
+        </div>
+      </div>
+      <div class="filter-results-bar" id="filterBar"></div>
+    </div>
+
+    <div class="section-title">Key metrics</div>
+    <div class="kpi-grid">
+      <div class="kpi-card"><div class="kpi-label">Total Patients</div><div class="kpi-value" id="kpiTotal">—</div></div>
+      <div class="kpi-card"><div class="kpi-label">Avg Length of Stay</div><div class="kpi-value" id="kpiLOS">—</div></div>
+      <div class="kpi-card"><div class="kpi-label">Readmission Rate</div><div class="kpi-value" id="kpiReadmit">—</div></div>
+      <div class="kpi-card"><div class="kpi-label">Avg Cost / Patient</div><div class="kpi-value" id="kpiCost">—</div></div>
+    </div>
+
+    <div class="section-title">Patient analytics</div>
+    <div class="charts-grid">
+      <div class="chart-card"><div class="chart-card-title">Patients by department</div><div style="position:relative;height:210px"><canvas id="cDept"></canvas></div></div>
+      <div class="chart-card"><div class="chart-card-title">Insurance type breakdown</div><div id="insLegend" class="chart-legend"></div><div style="position:relative;height:185px"><canvas id="cIns"></canvas></div></div>
+      <div class="chart-card"><div class="chart-card-title">Monthly admissions trend</div><div style="position:relative;height:210px"><canvas id="cMonth"></canvas></div></div>
+      <div class="chart-card"><div class="chart-card-title">Top 5 diagnoses</div><div style="position:relative;height:210px"><canvas id="cDiag"></canvas></div></div>
+    </div>
+
+    <div class="chart-card-wide" id="ageCard">
+      <div class="chart-card-title">Patient age distribution</div>
+      <div style="position:relative;height:200px"><canvas id="cAge"></canvas></div>
+    </div>
+
+    <div class="section-title">Recent patients</div>
+    <div class="table-section" id="tableSection">
+      <div class="table-header">
+        <span class="table-header-title">Latest 10 patient records</span>
+        <span class="table-badge" id="tableBadge">—</span>
+      </div>
+      <div style="overflow-x:auto">
+        <table class="data-table">
+          <thead><tr><th>Patient ID</th><th>Age</th><th>Department</th><th>Diagnosis</th><th>Length of Stay</th><th>Cost</th><th>Outcome</th></tr></thead>
+          <tbody id="tableBody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="section-title">AI analysis</div>
+    <div class="insights-trigger">
+      <span class="insights-hint">Analyze currently visible data and generate a plain-English summary</span>
+      <button class="btn-insights" id="insBtn" onclick="generateInsights()"><span>📊</span> Generate AI Insights</button>
+    </div>
+    <div class="insights-card" id="insightsCard">
+      <div class="insights-card-hdr">
+        <div style="display:flex;align-items:center;gap:10px">
+          <span style="font-size:15px">📊</span>
+          <span style="font-size:14px;font-weight:600;color:#0f172a">AI Analysis</span>
+          <span class="insights-badge" id="insBadge">—</span>
+        </div>
+        <span class="insights-ts" id="insTs"></span>
+      </div>
+      <div class="insights-body" id="insBody"></div>
+    </div>
+  </div>
+</div>
+</div>
+
+<script>
+let allData=[],currentData=[],charts={};
+const COLORS=['#185FA5','#1D9E75','#BA7517','#7F77DD','#D85A30','#D4537E','#639922'];
+const MONTHS=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+
+function parseCSV(t){
+  const lines=t.trim().split('\n');
+  const hdr=lines[0].split(',').map(h=>h.trim().toLowerCase().replace(/\s+/g,'_'));
+  return lines.slice(1).filter(l=>l.trim()).map(l=>{
+    const v=l.split(','),o={};
+    hdr.forEach((h,i)=>o[h]=(v[i]||'').trim());
+    return o;
+  });
+}
+
+function animateIn(){
+  document.querySelectorAll('.kpi-card,.chart-card,.chart-card-wide,.table-section').forEach((el,i)=>{
+    setTimeout(()=>el.classList.add('anim'),i*80);
+  });
+}
+
+function handleFile(input){
+  const file=input.files[0];if(!file)return;
+  const r=new FileReader();
+  r.onload=e=>{
+    allData=parseCSV(e.target.result);currentData=allData;
+    document.getElementById('fileName').textContent=file.name;
+    document.getElementById('fileCount').textContent=allData.length+' records loaded';
+    document.getElementById('fileBar').classList.add('show');
+    document.getElementById('emptyState').style.display='none';
+    document.getElementById('dashContent').style.display='block';
+    document.getElementById('filtersPanel').classList.add('show');
+    document.getElementById('insightsCard').classList.remove('show');
+    document.getElementById('statusLabel').textContent=allData.length+' patients loaded';
+    document.querySelectorAll('.kpi-card,.chart-card,.chart-card-wide,.table-section').forEach(el=>el.classList.remove('anim'));
+    populateDropdowns();
+    renderDashboard(allData);
+    setTimeout(animateIn,100);
+  };
+  r.readAsText(file);
+}
+
+function populateDropdowns(){
+  const depts=[...new Set(allData.map(r=>r.department).filter(Boolean))].sort();
+  const ins=[...new Set(allData.map(r=>r.insurance_type).filter(Boolean))].sort();
+  document.getElementById('fDept').innerHTML='<option value="">All departments</option>'+depts.map(d=>`<option>${d}</option>`).join('');
+  document.getElementById('fIns').innerHTML='<option value="">All types</option>'+ins.map(d=>`<option>${d}</option>`).join('');
+  const dates=allData.map(r=>r.admission_date).filter(Boolean).sort();
+  if(dates.length){document.getElementById('fDateStart').value=dates[0];document.getElementById('fDateEnd').value=dates[dates.length-1];}
+}
+
+function getFiltered(){
+  const ds=document.getElementById('fDateStart').value,de=document.getElementById('fDateEnd').value;
+  const dept=document.getElementById('fDept').value,gender=document.getElementById('fGender').value,ins=document.getElementById('fIns').value;
+  return allData.filter(r=>{
+    if(ds&&r.admission_date<ds)return false;
+    if(de&&r.admission_date>de)return false;
+    if(dept&&r.department!==dept)return false;
+    if(gender&&r.gender!==gender)return false;
+    if(ins&&r.insurance_type!==ins)return false;
+    return true;
+  });
+}
+
+function applyFilters(){
+  currentData=getFiltered();
+  const active=[document.getElementById('fDept').value,document.getElementById('fGender').value,document.getElementById('fIns').value].filter(Boolean).length;
+  document.getElementById('filterBar').innerHTML=active>0
+    ?`<span class="filter-pill">${active} filter${active>1?'s':''} active</span> &nbsp; Showing <strong>${currentData.length}</strong> of <strong>${allData.length}</strong> patients`
+    :`Showing all <strong>${allData.length}</strong> patients`;
+  document.getElementById('insightsCard').classList.remove('show');
+  renderDashboard(currentData);
+}
+
+function resetFilters(){
+  const dates=allData.map(r=>r.admission_date).filter(Boolean).sort();
+  document.getElementById('fDateStart').value=dates[0]||'';
+  document.getElementById('fDateEnd').value=dates[dates.length-1]||'';
+  ['fDept','fGender','fIns'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('filterBar').innerHTML=`Showing all <strong>${allData.length}</strong> patients`;
+  currentData=allData;
+  document.getElementById('insightsCard').classList.remove('show');
+  renderDashboard(allData);
+}
+
+function renderDashboard(data){
+  const total=data.length;
+  if(!total){['kpiTotal','kpiLOS','kpiReadmit','kpiCost'].forEach(id=>document.getElementById(id).innerHTML='0');return;}
+  const avgLOS=data.reduce((s,r)=>s+parseFloat(r.length_of_stay_days||0),0)/total;
+  const readmitRate=(data.filter(r=>r.readmitted&&r.readmitted.toLowerCase()==='yes').length/total)*100;
+  const avgCost=data.reduce((s,r)=>s+parseFloat(r.total_cost||0),0)/total;
+  document.getElementById('kpiTotal').innerHTML=total;
+  document.getElementById('kpiLOS').innerHTML=avgLOS.toFixed(1)+'<small> days</small>';
+  document.getElementById('kpiReadmit').innerHTML=readmitRate.toFixed(1)+'<small>%</small>';
+  document.getElementById('kpiCost').innerHTML='$'+Math.round(avgCost).toLocaleString();
+
+  const deptCount={},insCount={},monthCount={},diagCount={};
+  const ageBuckets={'0–18':0,'19–35':0,'36–50':0,'51–65':0,'66–80':0,'80+':0};
+  data.forEach(r=>{
+    if(r.department)deptCount[r.department]=(deptCount[r.department]||0)+1;
+    if(r.insurance_type)insCount[r.insurance_type]=(insCount[r.insurance_type]||0)+1;
+    if(r.diagnosis)diagCount[r.diagnosis]=(diagCount[r.diagnosis]||0)+1;
+    if(r.admission_date){const d=new Date(r.admission_date);if(!isNaN(d)){const k=d.getFullYear()+'-'+(d.getMonth()+1);monthCount[k]=(monthCount[k]||0)+1;}}
+    const age=parseInt(r.age||0);
+    if(age<=18)ageBuckets['0–18']++;
+    else if(age<=35)ageBuckets['19–35']++;
+    else if(age<=50)ageBuckets['36–50']++;
+    else if(age<=65)ageBuckets['51–65']++;
+    else if(age<=80)ageBuckets['66–80']++;
+    else ageBuckets['80+']++;
+  });
+
+  const deptL=Object.keys(deptCount).sort((a,b)=>deptCount[b]-deptCount[a]);
+  const insL=Object.keys(insCount),insV=insL.map(k=>insCount[k]);
+  const mKeys=Object.keys(monthCount).sort();
+  const mLabels=mKeys.map(k=>{const p=k.split('-');return MONTHS[parseInt(p[1])-1]+' '+p[0].slice(2);});
+  const diagTop=Object.entries(diagCount).sort((a,b)=>b[1]-a[1]).slice(0,5);
+  const ageL=Object.keys(ageBuckets),ageV=Object.values(ageBuckets);
+
+  ['cDept','cIns','cMonth','cDiag','cAge'].forEach(id=>{if(charts[id])charts[id].destroy();});
+
+  charts.cDept=new Chart(document.getElementById('cDept'),{type:'bar',data:{labels:deptL,datasets:[{data:deptL.map(k=>deptCount[k]),backgroundColor:COLORS,borderRadius:4}]},options:{responsive:true,maintainAspectRatio:false,animation:{duration:600},plugins:{legend:{display:false}},scales:{x:{ticks:{font:{size:11},maxRotation:30}},y:{ticks:{font:{size:11}},beginAtZero:true}}}});
+  document.getElementById('insLegend').innerHTML=insL.map((l,i)=>`<span><span class="legend-dot" style="background:${COLORS[i%COLORS.length]}"></span>${l} ${Math.round(insV[i]/total*100)}%</span>`).join('');
+  charts.cIns=new Chart(document.getElementById('cIns'),{type:'doughnut',data:{labels:insL,datasets:[{data:insV,backgroundColor:COLORS,borderWidth:0}]},options:{responsive:true,maintainAspectRatio:false,animation:{animateRotate:true,duration:700},cutout:'62%',plugins:{legend:{display:false}}}});
+  charts.cMonth=new Chart(document.getElementById('cMonth'),{type:'line',data:{labels:mLabels,datasets:[{data:mKeys.map(k=>monthCount[k]),borderColor:'#185FA5',backgroundColor:'rgba(24,95,165,0.08)',fill:true,tension:0.4,pointBackgroundColor:'#185FA5',pointRadius:4}]},options:{responsive:true,maintainAspectRatio:false,animation:{duration:700},plugins:{legend:{display:false}},scales:{x:{ticks:{font:{size:11},autoSkip:false,maxRotation:40}},y:{ticks:{font:{size:11}},beginAtZero:true}}}});
+  charts.cDiag=new Chart(document.getElementById('cDiag'),{type:'bar',data:{labels:diagTop.map(d=>d[0]),datasets:[{data:diagTop.map(d=>d[1]),backgroundColor:'#1D9E75',borderRadius:4}]},options:{responsive:true,maintainAspectRatio:false,animation:{duration:600},indexAxis:'y',plugins:{legend:{display:false}},scales:{x:{ticks:{font:{size:11}},beginAtZero:true},y:{ticks:{font:{size:11}}}}}});
+  charts.cAge=new Chart(document.getElementById('cAge'),{type:'bar',data:{labels:ageL,datasets:[{data:ageV,backgroundColor:ageL.map((_,i)=>`rgba(24,95,165,${0.45+i*0.1})`),borderRadius:5}]},options:{responsive:true,maintainAspectRatio:false,animation:{duration:700},plugins:{legend:{display:false}},scales:{x:{ticks:{font:{size:12}}},y:{ticks:{font:{size:11}},beginAtZero:true,title:{display:true,text:'Patients',font:{size:11},color:'#888'}}}}});
+
+  renderTable(data);
+}
+
+function renderTable(data){
+  const last10=[...data].reverse().slice(0,10);
+  document.getElementById('tableBadge').textContent=`Showing ${last10.length} of ${data.length} patients`;
+  document.getElementById('tableBody').innerHTML=last10.map(r=>{
+    const outcome=(r.outcome||'').toLowerCase();
+    const cls=outcome.includes('discharg')?'outcome-d':outcome.includes('transfer')?'outcome-t':'outcome-o';
+    return `<tr>
+      <td style="font-family:'DM Mono',monospace;font-size:11px;color:#94a3b8">${r.patient_id||'—'}</td>
+      <td>${r.age||'—'}</td><td>${r.department||'—'}</td><td>${r.diagnosis||'—'}</td>
+      <td style="text-align:center">${r.length_of_stay_days||'0'} <small style="color:#94a3b8">days</small></td>
+      <td>$${parseInt(r.total_cost||0).toLocaleString()}</td>
+      <td><span class="outcome-badge ${cls}">${r.outcome||'—'}</span></td>
+    </tr>`;
+  }).join('');
+}
+
+function generateInsights(){
+  const data=currentData;if(!data.length)return;
+  const btn=document.getElementById('insBtn');
+  btn.disabled=true;
+  btn.innerHTML='<span class="thinking-dots"><span></span><span></span><span></span></span> Analyzing...';
+  setTimeout(()=>{
+    const total=data.length;
+    const deptC={},insC={},diagC={},mC={};
+    let tLOS=0,readmit=0;
+    data.forEach(r=>{
+      if(r.department)deptC[r.department]=(deptC[r.department]||0)+1;
+      if(r.insurance_type)insC[r.insurance_type]=(insC[r.insurance_type]||0)+1;
+      if(r.diagnosis)diagC[r.diagnosis]=(diagC[r.diagnosis]||0)+1;
+      tLOS+=parseFloat(r.length_of_stay_days||0);
+      if(r.readmitted&&r.readmitted.toLowerCase()==='yes')readmit++;
+      if(r.admission_date){const d=new Date(r.admission_date);if(!isNaN(d)){const k=d.getFullYear()+'-'+(d.getMonth()+1);mC[k]=(mC[k]||0)+1;}}
+    });
+    const topDept=Object.entries(deptC).sort((a,b)=>b[1]-a[1])[0];
+    const topDiag=Object.entries(diagC).sort((a,b)=>b[1]-a[1])[0];
+    const topIns=Object.entries(insC).sort((a,b)=>b[1]-a[1])[0];
+    const avgLOS=tLOS/total,rRate=(readmit/total)*100;
+    const mVals=Object.keys(mC).sort().map(k=>mC[k]);
+    const h1=mVals.slice(0,Math.floor(mVals.length/2)),h2=mVals.slice(Math.floor(mVals.length/2));
+    const a1=h1.reduce((a,b)=>a+b,0)/(h1.length||1),a2=h2.reduce((a,b)=>a+b,0)/(h2.length||1);
+    const trend=a2>a1*1.1?'increasing':a2<a1*0.9?'decreasing':'stable';
+    const tPct=Math.abs(((a2-a1)/a1)*100).toFixed(0);
+    const topDeptPct=((topDept[1]/total)*100).toFixed(0);
+    const topInsPct=((topIns[1]/total)*100).toFixed(0);
+    const rec=rRate>20
+      ?`Focus on reducing readmissions in <strong>${topDept[0]}</strong>, the highest-volume department. Structured discharge checklists and 7-day follow-up calls have shown measurable impact in similar settings.`
+      :trend==='increasing'
+      ?`Admissions are trending up by ~${tPct}%. Consider proactive capacity planning in <strong>${topDept[0]}</strong> to prevent bottlenecks and maintain quality of care.`
+      :`The high concentration of <strong>${topIns[0]}</strong> patients (${topInsPct}%) is an opportunity to negotiate improved reimbursement rates or expand targeted services for this group.`;
+    const rows=[
+      {ic:'🏥',color:'ic-blue',lbl:'Highest volume department',txt:`<strong>${topDept[0]}</strong> leads with ${topDept[1]} patients — ${topDeptPct}% of total admissions.`},
+      {ic:'📋',color:'ic-green',lbl:'Most common diagnosis',txt:`<strong>${topDiag[0]}</strong> is the most frequent with ${topDiag[1]} recorded cases.`},
+      {ic:'💳',color:'ic-amber',lbl:'Primary insurance type',txt:`<strong>${topIns[0]}</strong> covers ${topInsPct}% of patients in the current view.`},
+      {ic:'⏱',color:'ic-purple',lbl:'Length of stay observation',txt:avgLOS>5?`Average stay of <strong>${avgLOS.toFixed(1)} days</strong> is elevated — complex procedures are likely driving this.`:`Average stay of <strong>${avgLOS.toFixed(1)} days</strong> is efficient given the case mix.`},
+      {ic:'📈',color:'ic-teal',lbl:'Admissions trend',txt:trend==='stable'?`Monthly admissions have been <strong>stable</strong> throughout the observed period.`:`Admissions are <strong>${trend}</strong> — volume shifted ~<strong>${tPct}%</strong> between the first and second half.`},
+      {ic:'🔁',color:'ic-blue',lbl:'Readmission signal',txt:rRate>20?`Readmission rate of <strong>${rRate.toFixed(1)}%</strong> is above typical benchmarks — post-discharge protocols should be reviewed.`:`Readmission rate of <strong>${rRate.toFixed(1)}%</strong> is within acceptable range, indicating strong continuity of care.`},
+    ];
+    document.getElementById('insBody').innerHTML=rows.map(r=>`
+      <div class="insight-row">
+        <div class="insight-icon ${r.color}">${r.ic}</div>
+        <div><div class="insight-lbl">${r.lbl}</div><div class="insight-txt">${r.txt}</div></div>
+      </div>`).join('')+`
+      <div class="insight-rec">
+        <span class="rec-lbl">Recommendation</span>
+        <div class="rec-txt">${rec}</div>
+      </div>`;
+    document.getElementById('insBadge').textContent=`${total} patients analyzed`;
+    document.getElementById('insTs').textContent='Generated '+new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});
+    document.getElementById('insightsCard').classList.add('show');
+    btn.disabled=false;
+    btn.innerHTML='<span>📊</span> Regenerate Insights';
+  },900);
+}
+</script>
+</body>
+</html>
